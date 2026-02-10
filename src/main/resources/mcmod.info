@@ -1,0 +1,16 @@
+[
+{
+  "modid": "mphone",
+  "name": "MPhone Mod",
+  "description": "一个手机模组，为Minecraft添加手机功能",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["YourName"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

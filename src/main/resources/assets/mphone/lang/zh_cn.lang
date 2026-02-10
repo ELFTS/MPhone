@@ -1,0 +1,49 @@
+item.mphone.phone.name=MPhone手机
+item.mphone.sim_card.name=电话卡
+itemGroup.mphone=MPhone模组
+tile.mphone.base_station.name=信号基站
+
+# GUI
+mphone.gui.appstore.title=应用商店
+mphone.gui.appstore.category.all=全部
+mphone.gui.appstore.category.utility=工具
+mphone.gui.appstore.category.game=游戏
+mphone.gui.appstore.category.social=社交
+mphone.gui.appstore.category.productivity=生产力
+mphone.gui.appstore.category.entertainment=娱乐
+
+mphone.gui.appstore.status.installed=已安装
+mphone.gui.appstore.status.not_installed=未安装
+mphone.gui.appstore.button.install=安装
+mphone.gui.appstore.button.uninstall=卸载
+
+# Settings
+mphone.gui.settings.title=设置
+mphone.gui.settings.sound=声音
+mphone.gui.settings.notification=通知
+mphone.gui.settings.brightness=亮度
+mphone.gui.settings.language=语言
+mphone.gui.settings.wallpaper=壁纸
+mphone.gui.settings.about=关于手机
+mphone.gui.settings.enabled=开启
+mphone.gui.settings.disabled=关闭
+
+# Messages
+mphone.message.app.installed=已安装 %s
+mphone.message.app.uninstalled=已卸载 %s
+mphone.message.settings.sound.on=声音已开启
+mphone.message.settings.sound.off=声音已关闭
+mphone.message.settings.notification.on=通知已开启
+mphone.message.settings.notification.off=通知已关闭
+
+# SMS
+mphone.gui.sms.title=短信
+mphone.gui.sms.new_message=新建短信
+mphone.gui.sms.receiver=收件人
+mphone.gui.sms.send=发送
+mphone.gui.sms.no_sim=请先插入SIM卡
+mphone.gui.sms.no_messages=暂无短信
+mphone.gui.sms.view=查看
+mphone.gui.sms.message_sent=短信已发送
+mphone.gui.sms.empty_receiver=请输入收件人号码
+mphone.gui.sms.empty_content=请输入短信内容

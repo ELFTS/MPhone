@@ -1,0 +1,49 @@
+item.mphone.phone.name=MPhone
+item.mphone.sim_card.name=SIM Card
+itemGroup.mphone=MPhone Mod
+tile.mphone.base_station.name=Base Station
+
+# GUI
+mphone.gui.appstore.title=App Store
+mphone.gui.appstore.category.all=All
+mphone.gui.appstore.category.utility=Utility
+mphone.gui.appstore.category.game=Game
+mphone.gui.appstore.category.social=Social
+mphone.gui.appstore.category.productivity=Productivity
+mphone.gui.appstore.category.entertainment=Entertainment
+
+mphone.gui.appstore.status.installed=Installed
+mphone.gui.appstore.status.not_installed=Not Installed
+mphone.gui.appstore.button.install=Install
+mphone.gui.appstore.button.uninstall=Uninstall
+
+# Settings
+mphone.gui.settings.title=Settings
+mphone.gui.settings.sound=Sound
+mphone.gui.settings.notification=Notification
+mphone.gui.settings.brightness=Brightness
+mphone.gui.settings.language=Language
+mphone.gui.settings.wallpaper=Wallpaper
+mphone.gui.settings.about=About Phone
+mphone.gui.settings.enabled=On
+mphone.gui.settings.disabled=Off
+
+# Messages
+mphone.message.app.installed=Installed %s
+mphone.message.app.uninstalled=Uninstalled %s
+mphone.message.settings.sound.on=Sound enabled
+mphone.message.settings.sound.off=Sound disabled
+mphone.message.settings.notification.on=Notifications enabled
+mphone.message.settings.notification.off=Notifications disabled
+
+# SMS
+mphone.gui.sms.title=SMS
+mphone.gui.sms.new_message=New Message
+mphone.gui.sms.receiver=To
+mphone.gui.sms.send=Send
+mphone.gui.sms.no_sim=Please insert SIM card
+mphone.gui.sms.no_messages=No messages
+mphone.gui.sms.view=View
+mphone.gui.sms.message_sent=Message sent
+mphone.gui.sms.empty_receiver=Please enter receiver number
+mphone.gui.sms.empty_content=Please enter message content
