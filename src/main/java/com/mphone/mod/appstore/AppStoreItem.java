@@ -1,6 +1,7 @@
 package com.mphone.mod.appstore;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * 应用商店中的应用定义
@@ -16,6 +17,7 @@ public class AppStoreItem {
     private final int guiId;
     private final int iconColor;
     private final int iconChar;
+    private final ResourceLocation iconTexture;
 
     public enum AppType {
         UTILITY("工具"),
@@ -37,6 +39,11 @@ public class AppStoreItem {
 
     public AppStoreItem(String id, String name, String description, ItemStack icon, AppType type, 
                         int guiId, int iconColor, int iconChar) {
+        this(id, name, description, icon, type, guiId, iconColor, iconChar, null);
+    }
+
+    public AppStoreItem(String id, String name, String description, ItemStack icon, AppType type, 
+                        int guiId, int iconColor, int iconChar, ResourceLocation iconTexture) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -45,6 +52,7 @@ public class AppStoreItem {
         this.guiId = guiId;
         this.iconColor = iconColor;
         this.iconChar = iconChar;
+        this.iconTexture = iconTexture;
     }
 
     public String getId() {
@@ -77,5 +85,13 @@ public class AppStoreItem {
 
     public int getIconChar() {
         return iconChar;
+    }
+
+    public ResourceLocation getIconTexture() {
+        return iconTexture;
+    }
+
+    public boolean hasIconTexture() {
+        return iconTexture != null;
     }
 }

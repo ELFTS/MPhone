@@ -180,12 +180,52 @@ public class GuiAppStore extends GuiScreen {
     }
 
     private void drawAppIcon(AppStoreItem app, int x, int y) {
-        RenderHelper.enableGUIStandardItemLighting();
-        GlStateManager.enableDepth();
-        this.itemRender.renderItemAndEffectIntoGUI(app.getIcon(), x, y);
-        this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, app.getIcon(), x, y, null);
-        GlStateManager.disableDepth();
-        RenderHelper.disableStandardItemLighting();
+        int iconSize = 24;
+        
+        // 尝试从缓存获取纹理ID
+        int textureId = com.mphone.mod.client.IconTextureCache.getTextureId(app.getId());
+        
+        if (textureId > 0) {
+            // 使用缓存的纹理ID直接绘制
+            drawIconWithTextureId(textureId, x, y, iconSize);
+        } else {
+            // 备用：使用颜色块
+            drawRect(x, y, x + iconSize, y + iconSize, app.getIconColor());
+        }
+    }
+    
+    private void drawIconWithTextureId(int textureId, int x, int y, int iconSize) {
+        // 保存当前状态
+        GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
+        
+        // 绑定纹理 - 使用GL11直接绑定
+        org.lwjgl.opengl.GL11.glBindTexture(org.lwjgl.opengl.GL11.GL_TEXTURE_2D, textureId);
+        
+        // 设置OpenGL状态
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        
+        // 手动绘制四边形（使用GL_QUADS）
+        float u = 0.0F, v = 0.0F;
+        float u2 = 1.0F, v2 = 1.0F;
+        
+        net.minecraft.client.renderer.BufferBuilder buffer = net.minecraft.client.renderer.Tessellator.getInstance().getBuffer();
+        buffer.begin(org.lwjgl.opengl.GL11.GL_QUADS, net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX);
+        
+        buffer.pos(x, y + iconSize, 0).tex(u, v2).endVertex();
+        buffer.pos(x + iconSize, y + iconSize, 0).tex(u2, v2).endVertex();
+        buffer.pos(x + iconSize, y, 0).tex(u2, v).endVertex();
+        buffer.pos(x, y, 0).tex(u, v).endVertex();
+        
+        net.minecraft.client.renderer.Tessellator.getInstance().draw();
+        
+        // 恢复状态
+        GlStateManager.disableBlend();
+        GlStateManager.popAttrib();
+        GlStateManager.popMatrix();
     }
 
     private void drawScrollIndicator() {

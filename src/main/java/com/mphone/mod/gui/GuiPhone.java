@@ -35,7 +35,7 @@ public class GuiPhone extends GuiScreen {
     private static final int BTN_WIDTH = 30;
     private static final int BTN_HEIGHT = 30;
     private static final int BTN_MARGIN_X = 8;
-    private static final int BTN_MARGIN_Y = 4;
+    private static final int BTN_MARGIN_Y = 12;
     private static final int GRID_COLS = 3;
     private static final int GRID_ROWS = 5;
     private static final int APPS_PER_PAGE = 15;
@@ -59,12 +59,18 @@ public class GuiPhone extends GuiScreen {
         final int iconColor;
         final int iconChar;
         final int guiId;
+        final ResourceLocation iconTexture;
 
         SystemAppInfo(String name, int iconColor, int iconChar, int guiId) {
+            this(name, iconColor, iconChar, guiId, null);
+        }
+
+        SystemAppInfo(String name, int iconColor, int iconChar, int guiId, ResourceLocation iconTexture) {
             this.name = name;
             this.iconColor = iconColor;
             this.iconChar = iconChar;
             this.guiId = guiId;
+            this.iconTexture = iconTexture;
         }
     }
 
@@ -76,23 +82,35 @@ public class GuiPhone extends GuiScreen {
         final int guiId;
         final boolean isSystemApp;
         final String appId; // 对于应用商店应用
+        final ResourceLocation iconTexture;
 
         AppDisplayInfo(String name, int iconColor, int iconChar, int guiId, boolean isSystemApp, String appId) {
+            this(name, iconColor, iconChar, guiId, isSystemApp, appId, null);
+        }
+
+        AppDisplayInfo(String name, int iconColor, int iconChar, int guiId, boolean isSystemApp, String appId, ResourceLocation iconTexture) {
             this.name = name;
             this.iconColor = iconColor;
             this.iconChar = iconChar;
             this.guiId = guiId;
             this.isSystemApp = isSystemApp;
             this.appId = appId;
+            this.iconTexture = iconTexture;
         }
     }
 
+    private static ResourceLocation getSystemAppIcon(String name) {
+        // 使用 AppIconManager 获取预加载的图标
+        com.mphone.mod.client.AppIconManager.init();
+        return com.mphone.mod.client.AppIconManager.getIcon(name);
+    }
+
     private static final SystemAppInfo[] SYSTEM_APPS = {
-        new SystemAppInfo("联系人", 0xFF2196F3, 0x263A, GuiHandler.GUI_CONTACTS),
-        new SystemAppInfo("短信",   0xFF4CAF50, 0x2709, GuiHandler.GUI_SMS),
-        new SystemAppInfo("相机",   0xFFFF5722, 0x25CF, -1), // 相机特殊处理
-        new SystemAppInfo("设置",   0xFF9E9E9E, 0x2699, GuiHandler.GUI_SETTINGS),
-        new SystemAppInfo("商店",   0xFFFF9800, 0x2605, GuiHandler.GUI_APP_STORE)
+        new SystemAppInfo("联系人", 0xFF2196F3, 0x263A, GuiHandler.GUI_CONTACTS, getSystemAppIcon("contacts")),
+        new SystemAppInfo("短信",   0xFF4CAF50, 0x2709, GuiHandler.GUI_SMS, getSystemAppIcon("sms")),
+        new SystemAppInfo("相机",   0xFFFF5722, 0x25CF, -1, getSystemAppIcon("camera")), // 相机特殊处理
+        new SystemAppInfo("设置",   0xFF9E9E9E, 0x2699, GuiHandler.GUI_SETTINGS, getSystemAppIcon("settings")),
+        new SystemAppInfo("商店",   0xFFFF9800, 0x2605, GuiHandler.GUI_APP_STORE, getSystemAppIcon("appstore"))
     };
 
     public GuiPhone(InventoryPlayer playerInventory) {
@@ -124,7 +142,7 @@ public class GuiPhone extends GuiScreen {
 
         // 添加系统应用
         for (SystemAppInfo app : SYSTEM_APPS) {
-            displayApps.add(new AppDisplayInfo(app.name, app.iconColor, app.iconChar, app.guiId, true, null));
+            displayApps.add(new AppDisplayInfo(app.name, app.iconColor, app.iconChar, app.guiId, true, null, app.iconTexture));
         }
 
         // 添加已安装的应用商店应用
@@ -140,7 +158,8 @@ public class GuiPhone extends GuiScreen {
                         app.getIconChar(),
                         app.getGuiId(),
                         false,
-                        appId
+                        appId,
+                        app.hasIconTexture() ? app.getIconTexture() : null
                     ));
                 }
             }
@@ -264,16 +283,74 @@ public class GuiPhone extends GuiScreen {
     }
 
     private void drawAppButton(int x, int y, int width, int height, AppDisplayInfo app, boolean hovered) {
-        int cornerRadius = 6;
-        int baseColor = app.iconColor;
-        int bgColor = hovered ? brightenColor(baseColor, 1.2f) : baseColor;
-        int shadowColor = darkenColor(baseColor, 0.7f);
+        // 尝试从缓存获取纹理ID
+        int textureId = com.mphone.mod.client.IconTextureCache.getTextureId(app.appId);
+        
+        if (textureId > 0) {
+            // 使用缓存的纹理ID直接绘制图标（无边框）
+            drawIconWithTextureId(textureId, x, y, width, height);
+        } else if (app.iconTexture != null) {
+            // 备用：尝试从ResourceLocation获取
+            int cachedId = com.mphone.mod.client.IconTextureCache.getTextureId(app.iconTexture);
+            if (cachedId > 0) {
+                drawIconWithTextureId(cachedId, x, y, width, height);
+            } else {
+                // 使用Unicode字符作为图标
+                drawUnicodeIcon(x, y, width, height, app.iconChar);
+            }
+        } else {
+            // 使用Unicode字符作为图标
+            drawUnicodeIcon(x, y, width, height, app.iconChar);
+        }
 
-        drawRoundedRect(x, y, width, height, cornerRadius, bgColor);
-        drawRoundedRectBottomShadow(x, y + height - 3, width, 3, cornerRadius, shadowColor);
-        drawRoundedRectTopHighlight(x, y, width, 3, cornerRadius, 0x40FFFFFF);
+        int textWidth = this.fontRenderer.getStringWidth(app.name);
+        int textX = x + (width - textWidth) / 2;
+        int textY = y + height + 3;
 
-        String icon = String.valueOf((char) app.iconChar);
+        this.fontRenderer.drawString(app.name, textX + 1, textY + 1, 0x55000000);
+        this.fontRenderer.drawString(app.name, textX, textY, 0xFFFFFF);
+    }
+
+    private void drawIconWithTextureId(int textureId, int x, int y, int width, int height) {
+        int iconSize = 24;
+        int iconX = x + (width - iconSize) / 2;
+        int iconY = y + 4;
+
+        // 保存当前状态
+        GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
+
+        // 绑定纹理 - 使用GL11直接绑定
+        org.lwjgl.opengl.GL11.glBindTexture(org.lwjgl.opengl.GL11.GL_TEXTURE_2D, textureId);
+
+        // 设置OpenGL状态
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+        // 手动绘制四边形（使用GL_QUADS）
+        float u = 0.0F, v = 0.0F;
+        float u2 = 1.0F, v2 = 1.0F;
+
+        net.minecraft.client.renderer.BufferBuilder buffer = net.minecraft.client.renderer.Tessellator.getInstance().getBuffer();
+        buffer.begin(org.lwjgl.opengl.GL11.GL_QUADS, net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX);
+
+        buffer.pos(iconX, iconY + iconSize, 0).tex(u, v2).endVertex();
+        buffer.pos(iconX + iconSize, iconY + iconSize, 0).tex(u2, v2).endVertex();
+        buffer.pos(iconX + iconSize, iconY, 0).tex(u2, v).endVertex();
+        buffer.pos(iconX, iconY, 0).tex(u, v).endVertex();
+
+        net.minecraft.client.renderer.Tessellator.getInstance().draw();
+
+        // 恢复状态
+        GlStateManager.disableBlend();
+        GlStateManager.popAttrib();
+        GlStateManager.popMatrix();
+    }
+
+    private void drawUnicodeIcon(int x, int y, int width, int height, int iconChar) {
+        String icon = String.valueOf((char) iconChar);
         int iconX = x + (width - 16) / 2;
         int iconY = y + 4;
 
@@ -281,13 +358,6 @@ public class GuiPhone extends GuiScreen {
         GlStateManager.scale(1.2f, 1.2f, 1.0f);
         this.fontRenderer.drawString(icon, (int)((iconX + 2) / 1.2f), (int)(iconY / 1.2f), 0xFFFFFF);
         GlStateManager.popMatrix();
-
-        int textWidth = this.fontRenderer.getStringWidth(app.name);
-        int textX = x + (width - textWidth) / 2;
-        int textY = y + height + 2;
-
-        this.fontRenderer.drawString(app.name, textX + 1, textY + 1, 0x55000000);
-        this.fontRenderer.drawString(app.name, textX, textY, 0xFFFFFF);
     }
 
     private void drawPageIndicator() {

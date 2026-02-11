@@ -1,8 +1,10 @@
 package com.mphone.mod.appstore;
 
+import com.mphone.mod.MPhoneMod;
 import com.mphone.mod.gui.GuiHandler;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,12 @@ public class AppStoreManager {
         return instance;
     }
 
+    private ResourceLocation getAppIcon(String name) {
+        // 使用 AppIconManager 获取预加载的图标
+        com.mphone.mod.client.AppIconManager.init();
+        return com.mphone.mod.client.AppIconManager.getIcon(name);
+    }
+
     private void initializeDefaultApps() {
         // 工具类应用
         availableApps.add(new AppStoreItem(
@@ -36,8 +44,9 @@ public class AppStoreManager {
             new ItemStack(Items.COMPASS),
             AppStoreItem.AppType.UTILITY,
             GuiHandler.GUI_COMPASS,
-            0xFF795548,  // 棕色
-            0x263C       // 指南针符号
+            0xFF835432,  // 棕色 (Minecraft风格)
+            0x263C,      // 指南针符号 (备用)
+            getAppIcon("compass")
         ));
 
         availableApps.add(new AppStoreItem(
@@ -47,8 +56,9 @@ public class AppStoreManager {
             new ItemStack(Items.CLOCK),
             AppStoreItem.AppType.UTILITY,
             GuiHandler.GUI_CLOCK,
-            0xFF607D8B,  // 蓝灰色
-            0x23F0       // 时钟符号
+            0xFF3AB3DA,  // 青色 (Minecraft风格)
+            0x23F0,      // 时钟符号 (备用)
+            getAppIcon("clock")
         ));
 
         availableApps.add(new AppStoreItem(
@@ -58,8 +68,9 @@ public class AppStoreManager {
             new ItemStack(Items.PAPER),
             AppStoreItem.AppType.UTILITY,
             GuiHandler.GUI_CALCULATOR,
-            0xFF3F51B5,  // 靛蓝色
-            0x221A       // 根号符号
+            0xFF3C44AA,  // 蓝色 (Minecraft风格)
+            0x221A,      // 根号符号 (备用)
+            getAppIcon("calculator")
         ));
 
         // 游戏类应用
@@ -70,8 +81,9 @@ public class AppStoreManager {
             new ItemStack(Items.APPLE),
             AppStoreItem.AppType.GAME,
             GuiHandler.GUI_SNAKE_GAME,
-            0xFF4CAF50,  // 绿色
-            0x2605       // 星星
+            0xFF5D8C22,  // 绿色 (Minecraft风格)
+            0x2605,      // 星星 (备用)
+            getAppIcon("snake")
         ));
 
         availableApps.add(new AppStoreItem(
@@ -81,8 +93,9 @@ public class AppStoreManager {
             new ItemStack(Items.BRICK),
             AppStoreItem.AppType.GAME,
             GuiHandler.GUI_TETRIS_GAME,
-            0xFF9C27B0,  // 紫色
-            0x25A0       // 方块
+            0xFF8932B8,  // 紫色 (Minecraft风格)
+            0x25A0,      // 方块 (备用)
+            getAppIcon("tetris")
         ));
 
         // 社交类应用
@@ -93,8 +106,9 @@ public class AppStoreManager {
             new ItemStack(Items.BOOK),
             AppStoreItem.AppType.SOCIAL,
             GuiHandler.GUI_CHAT,
-            0xFF2196F3,  // 蓝色
-            0x272F       // 对话气泡
+            0xFF3C44AA,  // 蓝色 (Minecraft风格)
+            0x272F,      // 对话气泡 (备用)
+            getAppIcon("chat")
         ));
 
         availableApps.add(new AppStoreItem(
@@ -104,8 +118,9 @@ public class AppStoreManager {
             new ItemStack(Items.FEATHER),
             AppStoreItem.AppType.SOCIAL,
             GuiHandler.GUI_MAIL,
-            0xFFFF9800,  // 橙色
-            0x2709       // 信封
+            0xFFF9801D,  // 橙色 (Minecraft风格)
+            0x2709,      // 信封 (备用)
+            getAppIcon("mail")
         ));
 
         // 生产力类应用
@@ -116,8 +131,9 @@ public class AppStoreManager {
             new ItemStack(Items.WRITABLE_BOOK),
             AppStoreItem.AppType.PRODUCTIVITY,
             GuiHandler.GUI_NOTES,
-            0xFFFFEB3B,  // 黄色
-            0x270E       // 铅笔
+            0xFFFED83D,  // 黄色 (Minecraft风格)
+            0x270E,      // 铅笔 (备用)
+            getAppIcon("notes")
         ));
 
         availableApps.add(new AppStoreItem(
@@ -127,8 +143,9 @@ public class AppStoreManager {
             new ItemStack(Items.PAPER),
             AppStoreItem.AppType.PRODUCTIVITY,
             GuiHandler.GUI_CALENDAR,
-            0xFFE91E63,  // 粉红色
-            0x1F4C5      // 日历符号
+            0xFFC74EBD,  // 粉色 (Minecraft风格)
+            0x1F4C5,     // 日历符号 (备用)
+            getAppIcon("calendar")
         ));
 
         // 娱乐类应用
@@ -139,8 +156,9 @@ public class AppStoreManager {
             new ItemStack(Items.RECORD_13),
             AppStoreItem.AppType.ENTERTAINMENT,
             GuiHandler.GUI_MUSIC,
-            0xFF00BCD4,  // 青色
-            0x266B       // 音符
+            0xFF169C9C,  // 青色 (Minecraft风格)
+            0x266B,      // 音符 (备用)
+            getAppIcon("music")
         ));
 
         availableApps.add(new AppStoreItem(
@@ -150,8 +168,9 @@ public class AppStoreManager {
             new ItemStack(Items.PAINTING),
             AppStoreItem.AppType.ENTERTAINMENT,
             GuiHandler.GUI_GALLERY,
-            0xFFFF5722,  // 深橙色
-            0x25A1       // 图片框
+            0xFFB02E26,  // 红色 (Minecraft风格)
+            0x25A1,      // 图片框 (备用)
+            getAppIcon("gallery")
         ));
     }
 

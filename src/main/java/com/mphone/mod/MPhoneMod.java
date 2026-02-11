@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 public class MPhoneMod {
     public static final String MODID = "mphone";
     public static final String NAME = "MPhone Mod";
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.0.1";
 
     @Instance(MODID)
     public static MPhoneMod instance;

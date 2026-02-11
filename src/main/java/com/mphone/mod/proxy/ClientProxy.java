@@ -1,5 +1,6 @@
 package com.mphone.mod.proxy;
 
+import com.mphone.mod.client.IconTextureCache;
 import com.mphone.mod.init.ModBlocks;
 import com.mphone.mod.init.ModItems;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -20,6 +21,8 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
+        // 初始化图标纹理缓存
+        IconTextureCache.init();
     }
 
     @Override
